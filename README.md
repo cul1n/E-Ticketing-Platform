@@ -9,6 +9,7 @@ For Users:
 - add funds to their balance
 - view owned tickets
 - view ticket details
+- filter tickets by location
 - buy tickets
 
 For Admin:
