@@ -16,7 +16,6 @@ public class User {
         this.password = password;
         this.email = email;
         this.isAdmin = false;
-        this.funds = 0.0;
         numberOfUsers++;
     }
 

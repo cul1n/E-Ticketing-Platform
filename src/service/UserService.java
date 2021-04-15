@@ -11,22 +11,22 @@ public class UserService {
     }
 
     public boolean authentication(Platform platform, String username, String password){
-        User u = findUser(platform, username);
-        return u.getPassword().equals(password);
+        User user = findUser(platform, username);
+        return user.getPassword().equals(password);
     }
 
     public User findUser(Platform platform, String username) {
-        for(User u : platform.getUsers()){
-            if(u != null && u.getUsername().equals(username))
-                return u;
+        for(User user : platform.getUsers()){
+            if(user != null && user.getUsername().equals(username))
+                return user;
         }
         return null;
     }
 
     private int getNumberOfUsers(Platform platform) {
         int number = 0;
-        for(User u : platform.getUsers()){
-            if(u != null)
+        for(User user : platform.getUsers()){
+            if(user != null)
                 number++;
         }
         return number;
@@ -34,10 +34,10 @@ public class UserService {
 
     public void printUsers(Platform platform) {
         int index = 1;
-        for (User u : platform.getUsers()) {
-            if (u != null) {
+        for (User user : platform.getUsers()) {
+            if (user != null) {
                 System.out.print(index + ") ");
-                System.out.println(u);
+                System.out.println(user);
                 index++;
             }
         }

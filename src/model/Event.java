@@ -4,7 +4,7 @@ public abstract class Event {
     private final int id;
     private String name;
     private Location location;
-    static int numberOfEvents = 0;
+    private static int numberOfEvents = 0;
 
     public Event(String name, Location location) {
         this.id = numberOfEvents;
@@ -33,7 +33,7 @@ public abstract class Event {
         this.location = location;
     }
 
-    public static int getNumberOfEvents() {
+    public int getNumberOfEvents() {
         return numberOfEvents;
     }
 
