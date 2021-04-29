@@ -1,4 +1,5 @@
 # E-Ticketing-Platform
+Project made for the Advanced Object-Oriented Programming Course @ FMI UNIBUC.
 
 Functionalities:
 - create new user
