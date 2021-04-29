@@ -2,16 +2,68 @@ package service;
 
 import model.*;
 
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class PlatformService {
 
+    private ReaderService readerService = ReaderService.getInstance();
+    private WriterService writerSercice = WriterService.getInstance();
+    private static PlatformService INSTANCE;
+    private PlatformService() {}
+
+    public static PlatformService getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new PlatformService();
+        }
+        return INSTANCE;
+    }
+
+    public void Initialization(Platform platform) {
+        String fileText = readerService.readFile("src/csvfiles/Events.csv");
+        String[] eventsText = fileText.split("\n");
+        for(String eventText : eventsText) {
+            String[] eventComponents = eventText.split(",");
+            Location location = new Location(eventComponents[2], eventComponents[3]);
+            switch (eventComponents[4]) {
+                case "concert":
+                    Concert concert = new Concert(eventComponents[1], location, eventComponents[5], eventComponents[6]);
+                    addEvent(platform, concert);
+                    break;
+                case "sport match":
+                    SportMatch sportMatch = new SportMatch(eventComponents[1], location, eventComponents[5], eventComponents[6], eventComponents[7], Integer.parseInt(eventComponents[8]));
+                    addEvent(platform, sportMatch);
+                    break;
+                case "theater play":
+                    TheaterPlay theaterPlay = new TheaterPlay(eventComponents[1], location, eventComponents[5], eventComponents[6], Integer.parseInt(eventComponents[7]));
+                    addEvent(platform, theaterPlay);
+                    break;
+                default:
+                    System.out.println("Event type not defined.");
+                    break;
+            }
+        }
+
+        fileText = readerService.readFile("src/csvfiles/Tickets.csv");
+        String[] ticketsText = fileText.split("\n");
+        for(String ticketText : ticketsText) {
+            String[] ticketComponents = ticketText.split(",");
+            addTicket(platform, new Ticket(platform.getEvents().get(Integer.parseInt(ticketComponents[0])),
+                    Double.parseDouble(ticketComponents[1]),
+                    ticketComponents[2],
+                    Integer.parseInt(ticketComponents[3])));
+
+        }
+
+
+    }
+
     public void addEvent(Platform platform, Event event){
-        platform.getEvents()[getNumberOfEvents(platform)] = event;
+        platform.getEvents().add(event);
     }
 
     public void addTicket(Platform platform, Ticket ticket){
-        platform.getTickets()[getNumberOfTickets(platform)] = ticket;
+        platform.getTickets().add(ticket);
     }
 
     private int getNumberOfEvents(Platform platform) {
@@ -47,7 +99,7 @@ public class PlatformService {
     }
 
     public void printTickets(Platform platform) {
-        Arrays.sort(platform.getTickets(), (t1, t2) -> {
+        Collections.sort(platform.getTickets(), (t1, t2) -> {
             if (t1 == null && t2 != null) {
                 return 1;
             }
@@ -92,7 +144,7 @@ public class PlatformService {
 
 
     public void buyTicket(Ticket ticket, User user){
-        user.getTickets()[getNumberOfTicketsUser(user)] = ticket;
+        user.getTickets().add(ticket);
         ticket.setNumberOfTickets(ticket.getNumberOfTickets() - 1);
         user.setFunds(user.getFunds() - ticket.getPrice());
     }
@@ -107,9 +159,9 @@ public class PlatformService {
         return numberOfTickets;
     }
 
-    public void printTicketsUser(Platform platform, User u) {
+    public void printTicketsUser(Platform platform, User user) {
         int index = 1;
-        for (Ticket t : u.getTickets()) {
+        for (Ticket t : user.getTickets()) {
             if (t != null) {
                 System.out.print(index + ") ");
                 System.out.println(t);
@@ -119,7 +171,11 @@ public class PlatformService {
     }
 
     public void record(Platform platform, AuditLine auditLine) {
-        platform.getAudit()[getNumberOfLines(platform)] = auditLine;
+        String path = "src/csvfiles/Audit.csv";
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        platform.getAudit().add(auditLine);
+        writerSercice.writeInFile(path, auditLine + "," + timeStamp);
+
     }
 
 
@@ -135,10 +191,12 @@ public class PlatformService {
 
     public void printAudit(Platform platform) {
         int index = 1;
-        for (AuditLine a : platform.getAudit()) {
-            if (a != null) {
+        String fileText = readerService.readFile("src/csvfiles/Audit.csv");
+        String[] auditText = fileText.split("\n");
+        for (String auditLine : auditText) {
+            if (auditLine != null) {
                 System.out.print(index + ") ");
-                System.out.println(a);
+                System.out.println(auditLine);
                 index++;
             }
         }

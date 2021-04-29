@@ -10,14 +10,13 @@ public class Main {
 
     public static void main(String[] args) {
         Platform platform = new Platform();
-        UserService userService = new UserService();
-        PlatformService platformService = new PlatformService();
+        UserService userService = UserService.getInstance();
+        PlatformService platformService = PlatformService.getInstance();
         Scanner scanner = new Scanner(System.in);
         User currentUser = null;
 
-        User admin = new User("admin", "admin", "admin@gmail.com");
-        admin.setAdmin(true);
-        userService.register(platform, admin);
+        userService.Initialization(platform);
+        platformService.Initialization(platform);
 
         while(true) {
             System.out.println("Please choose one: login, register or exit");
@@ -94,7 +93,7 @@ public class Main {
                                 case "view":
                                     System.out.print("Pick a ticket id to view details of the event: ");
                                     int id = Integer.parseInt(scanner.nextLine());
-                                    System.out.println(platform.getTickets()[id-1].getEvent());
+                                    System.out.println(platform.getTickets().get(id - 1).getEvent());
                                     break;
                                 case "buy":
                                     System.out.print("Pick a ticket id to buy or type '-1' to cancel: ");
@@ -103,11 +102,11 @@ public class Main {
                                         System.out.println("Transaction canceled...");
                                     }
                                     else {
-                                        if(currentUser.getFunds() < platform.getTickets()[id-1].getPrice()) {
+                                        if(currentUser.getFunds() < platform.getTickets().get(id - 1).getPrice()) {
                                             System.out.println("Not enough funds.");
                                             System.out.println("Transaction canceled...");
                                         }
-                                        else if(platform.getTickets()[id-1].getNumberOfTickets() == 0) {
+                                        else if(platform.getTickets().get(id - 1).getNumberOfTickets() == 0) {
                                             System.out.println("No tickets left.");
                                             System.out.println("Transaction canceled...");
                                         }
@@ -115,8 +114,8 @@ public class Main {
                                             System.out.println("Ticket bought successfully.");
                                             platformService.record(platform, new AuditLine(currentUser.getUsername(),
                                                     "has bought a ticket for " +
-                                                            platform.getTickets()[id-1].getEvent().getName()));
-                                            platformService.buyTicket(platform.getTickets()[id-1] ,currentUser);
+                                                            platform.getTickets().get(id - 1).getEvent().getName()));
+                                            platformService.buyTicket(platform.getTickets().get(id - 1),currentUser);
                                         }
                                     }
                                     break;
@@ -180,6 +179,7 @@ public class Main {
                                             Location location = new Location(country, city);
                                             Concert concert = new Concert(name, location, artistName, musicGenre);
                                             platformService.addEvent(platform, concert);
+                                            platformService.record(platform, new AuditLine(currentUser.getUsername(), "has added a new concert: " + concert.getName()));
                                             break;
                                         case "sport match":
                                             System.out.print("Name of the sport: ");
@@ -194,6 +194,7 @@ public class Main {
                                             SportMatch sportMatch = new SportMatch(name, location, sportName,
                                                     team1, team2, estimatedTime);
                                             platformService.addEvent(platform, sportMatch);
+                                            platformService.record(platform, new AuditLine(currentUser.getUsername(), "has added a new sport match: " + sportMatch.getName()));
                                             break;
                                         case "theater play":
                                             System.out.print("Name of the play: ");
@@ -206,6 +207,7 @@ public class Main {
                                             TheaterPlay theaterPlay = new TheaterPlay(name, location,
                                                     playName, director, time);
                                             platformService.addEvent(platform, theaterPlay);
+                                            platformService.record(platform, new AuditLine(currentUser.getUsername(), "has added a new theater play: " + theaterPlay.getName()));
                                             break;
                                         default: System.out.println("This event type doesn't exist.");
                                     }
@@ -231,8 +233,9 @@ public class Main {
                                     double price = Double.parseDouble(scanner.nextLine());
                                     System.out.print("Number of tickets available: ");
                                     int numberOfTickets = Integer.parseInt(scanner.nextLine());
-                                    Ticket ticket = new Ticket(platform.getEvents()[id-1],price,type,numberOfTickets);
+                                    Ticket ticket = new Ticket(platform.getEvents().get(id - 1),price,type,numberOfTickets);
                                     platformService.addTicket(platform, ticket);
+                                    platformService.record(platform, new AuditLine(currentUser.getUsername(), "has added a new ticket for " + platform.getEvents().get(id - 1).getName()));
                                     break;
                                 default: System.out.println("This command doesn't exist.");
                             }

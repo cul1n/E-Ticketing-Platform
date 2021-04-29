@@ -1,24 +1,27 @@
 package model;
 
-public class Platform {
-    private User[] users = new User[100];
-    private Event[] events = new Event[100];
-    private Ticket[] tickets = new Ticket[100];
-    private AuditLine[] audit = new AuditLine[200];
+import java.util.ArrayList;
+import java.util.List;
 
-    public User[] getUsers() {
+public class Platform {
+    private List<User> users = new ArrayList<User>();
+    private List<Event> events = new ArrayList<Event>();
+    private List<Ticket> tickets = new ArrayList<Ticket>();
+    private List<AuditLine> audit = new ArrayList<AuditLine>();
+
+    public List<User> getUsers() {
         return users;
     }
 
-    public Event[] getEvents() {
+    public List<Event> getEvents() {
         return events;
     }
 
-    public Ticket[] getTickets() {
+    public List<Ticket> getTickets() {
         return tickets;
     }
 
-    public AuditLine[] getAudit() {
+    public List<AuditLine> getAudit() {
         return audit;
     }
 

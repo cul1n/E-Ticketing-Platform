@@ -1,0 +1,5 @@
+id,username,password,email,funds,is_admin
+0,admin,admin,admin@gmail.com,0,true
+1,calin,123,calin@gmail.com,100,false
+2,andrei,234,andrei@yahoo.com,30,false
+3,anonim11,anon,anonim@outlook.com,0,false

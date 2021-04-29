@@ -4,10 +4,33 @@ import model.*;
 
 public class UserService {
 
+    private ReaderService readerService = ReaderService.getInstance();
+
+    private static UserService INSTANCE;
+    private UserService() { }
+
+    public static UserService getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new UserService();
+        }
+        return INSTANCE;
+    }
+
+    public void Initialization(Platform platform) {
+        String fileText = readerService.readFile("src/csvfiles/Users.csv");
+        String[] usersText = fileText.split("\n");
+        for(String userText : usersText) {
+            String[] userComponents = userText.split(",");
+            User user = new User(userComponents[1],userComponents[2],userComponents[3]);
+            register(platform, user);
+            user.setFunds(Double.parseDouble(userComponents[4]));
+            user.setAdmin(Boolean.parseBoolean(userComponents[5]));
+
+        }
+    }
 
     public void register(Platform platform, User user){
-        int index = getNumberOfUsers(platform);
-        platform.getUsers()[index] = user;
+        platform.getUsers().add(user);
     }
 
     public boolean authentication(Platform platform, String username, String password){

@@ -19,6 +19,6 @@ public class AuditLine {
 
     @Override
     public String toString(){
-        return username + " " + action + ".";
+        return username + " " + action;
     }
 }

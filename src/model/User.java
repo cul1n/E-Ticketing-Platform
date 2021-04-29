@@ -1,5 +1,7 @@
 package model;
 
+import java.util.*;
+
 public class User {
     private int id;
     private String username;
@@ -7,8 +9,8 @@ public class User {
     private String email;
     private double funds;
     private boolean isAdmin;
-    private Ticket[] tickets = new Ticket[100];
-    static int numberOfUsers;
+    private List<Ticket> tickets = new ArrayList<Ticket>();
+    private static int numberOfUsers;
 
     public User(String username, String password, String email) {
         this.id = numberOfUsers;
@@ -67,11 +69,11 @@ public class User {
         isAdmin = admin;
     }
 
-    public Ticket[] getTickets() {
+    public List<Ticket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(Ticket[] tickets) {
+    public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
 
