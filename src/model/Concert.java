@@ -12,6 +12,12 @@ public class Concert extends Event{
         this.musicGenre = musicGenre;
     }
 
+    public Concert(int id, String name, Location location, String artistName, String musicGenre) {
+        super(id, name, location);
+        this.artistName = artistName;
+        this.musicGenre = musicGenre;
+    }
+
     public String getArtistName() {
         return artistName;
     }

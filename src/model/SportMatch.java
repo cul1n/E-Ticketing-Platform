@@ -14,6 +14,14 @@ public class SportMatch extends Event{
         this.estimatedTime = estimatedTime;
     }
 
+    public SportMatch(int id, String name, Location location, String sportName, String team1, String team2, int estimatedTime) {
+        super(id, name, location);
+        this.sportName = sportName;
+        this.team1 = team1;
+        this.team2 = team2;
+        this.estimatedTime = estimatedTime;
+    }
+
     public String getSportName() {
         return sportName;
     }

@@ -3,7 +3,6 @@ package main;
 
 import model.*;
 import service.*;
-
 import java.util.Scanner;
 
 public class Main {
@@ -14,7 +13,6 @@ public class Main {
         PlatformService platformService = PlatformService.getInstance();
         Scanner scanner = new Scanner(System.in);
         User currentUser = null;
-
         userService.Initialization(platform);
         platformService.Initialization(platform);
 
@@ -178,7 +176,7 @@ public class Main {
                                             String musicGenre = scanner.nextLine();
                                             Location location = new Location(country, city);
                                             Concert concert = new Concert(name, location, artistName, musicGenre);
-                                            platformService.addEvent(platform, concert);
+                                            platformService.addEvent(platform, concert, "Concert");
                                             platformService.record(platform, new AuditLine(currentUser.getUsername(), "has added a new concert: " + concert.getName()));
                                             break;
                                         case "sport match":
@@ -193,7 +191,7 @@ public class Main {
                                             location = new Location(country, city);
                                             SportMatch sportMatch = new SportMatch(name, location, sportName,
                                                     team1, team2, estimatedTime);
-                                            platformService.addEvent(platform, sportMatch);
+                                            platformService.addEvent(platform, sportMatch, "Sport Match");
                                             platformService.record(platform, new AuditLine(currentUser.getUsername(), "has added a new sport match: " + sportMatch.getName()));
                                             break;
                                         case "theater play":
@@ -206,7 +204,7 @@ public class Main {
                                             location = new Location(country, city);
                                             TheaterPlay theaterPlay = new TheaterPlay(name, location,
                                                     playName, director, time);
-                                            platformService.addEvent(platform, theaterPlay);
+                                            platformService.addEvent(platform, theaterPlay, "Theater Play");
                                             platformService.record(platform, new AuditLine(currentUser.getUsername(), "has added a new theater play: " + theaterPlay.getName()));
                                             break;
                                         default: System.out.println("This event type doesn't exist.");

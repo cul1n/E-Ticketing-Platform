@@ -12,6 +12,13 @@ public class TheaterPlay extends Event{
         this.time = time;
     }
 
+    public TheaterPlay(int id, String name, Location location, String playName, String director, int time) {
+        super(id, name, location);
+        this.playName = playName;
+        this.director = director;
+        this.time = time;
+    }
+
     public String getPlayName() {
         return playName;
     }

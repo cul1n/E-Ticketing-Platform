@@ -1,12 +1,16 @@
 package service;
 
 import model.*;
-
+import repository.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class PlatformService {
 
+    private ConcertRepository concertRepository = new ConcertRepository();
+    private SportMatchRepository sportMatchRepository = new SportMatchRepository();
+    private TheaterPlayRepository theaterPlayRepository = new TheaterPlayRepository();
+    private TicketRepository ticketRepository = new TicketRepository();
     private ReaderService readerService = ReaderService.getInstance();
     private WriterService writerSercice = WriterService.getInstance();
     private static PlatformService INSTANCE;
@@ -28,15 +32,15 @@ public class PlatformService {
             switch (eventComponents[4]) {
                 case "concert":
                     Concert concert = new Concert(eventComponents[1], location, eventComponents[5], eventComponents[6]);
-                    addEvent(platform, concert);
+                    addEvent(platform, concert, "Concert");
                     break;
                 case "sport match":
                     SportMatch sportMatch = new SportMatch(eventComponents[1], location, eventComponents[5], eventComponents[6], eventComponents[7], Integer.parseInt(eventComponents[8]));
-                    addEvent(platform, sportMatch);
+                    addEvent(platform, sportMatch, "Sport Match");
                     break;
                 case "theater play":
                     TheaterPlay theaterPlay = new TheaterPlay(eventComponents[1], location, eventComponents[5], eventComponents[6], Integer.parseInt(eventComponents[7]));
-                    addEvent(platform, theaterPlay);
+                    addEvent(platform, theaterPlay, "Theater Play");
                     break;
                 default:
                     System.out.println("Event type not defined.");
@@ -58,12 +62,20 @@ public class PlatformService {
 
     }
 
-    public void addEvent(Platform platform, Event event){
+    public void addEvent(Platform platform, Event event, String type){
         platform.getEvents().add(event);
+        if (type == "Concert")
+            concertRepository.addConcert((Concert) event);
+        else if (type == "Sport Match")
+            sportMatchRepository.addSportMatch((SportMatch) event);
+        else if (type == "Theater Play")
+            theaterPlayRepository.addTheaterPlay((TheaterPlay) event);
+
     }
 
     public void addTicket(Platform platform, Ticket ticket){
         platform.getTickets().add(ticket);
+        ticketRepository.addTicket(ticket);
     }
 
     private int getNumberOfEvents(Platform platform) {
@@ -145,6 +157,7 @@ public class PlatformService {
 
     public void buyTicket(Ticket ticket, User user){
         user.getTickets().add(ticket);
+        ticketRepository.decreaseNumberOfTickets(ticket);
         ticket.setNumberOfTickets(ticket.getNumberOfTickets() - 1);
         user.setFunds(user.getFunds() - ticket.getPrice());
     }
